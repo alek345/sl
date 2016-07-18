@@ -25,19 +25,6 @@ Node* make_variable_node(char *name)
     
     n->type = NODE_VARIABLE;
     n->variable.name = strdup(name);
-    n->variable.is_table = 0;
-    
-    return n;
-}
-
-
-Node* make_variable_table_node(char *name)
-{
-    Node *n = malloc(sizeof(Node));
-    
-    n->type = NODE_VARIABLE;
-    n->variable.name = strdup(name);
-    n->variable.is_table = 1;
     
     return n;
 }
@@ -180,6 +167,18 @@ Node* make_return_node(Node *expr)
     
     n->type = NODE_RETURN;
     n->return_node.expr = expr;
+    
+    return n;
+}
+
+Node* make_table_assignment_node(Node *variable, Node *table_expr, Node *expr)
+{
+    Node *n = malloc(sizeof(Node));
+    
+    n->type = NODE_TABLEASSIGNMENT;
+    n->table_assignment.variable = variable;
+    n->table_assignment.table_expr = table_expr;
+    n->table_assignment.expr = expr;
     
     return n;
 }

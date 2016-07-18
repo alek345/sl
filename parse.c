@@ -61,6 +61,9 @@ Node* factor()
         Node *expr = expression();
         expect(TOKEN_RIGHTPAR);
         return expr;
+    } else if (accept(TOKEN_LEFTSQUARE)) {
+        expect(TOKEN_RIGHTSQUARE);
+        return make_constant_node(CONSTANT_TABLE, "empty_table");
     } else if(accept(TOKEN_STRING)) {
         return make_constant_node(CONSTANT_STRING, start->val);
     } else {
@@ -180,6 +183,22 @@ Node* statement()
             
             return make_funccall_node(start->val, args);
             
+        } else if(accept(TOKEN_LEFTSQUARE)) {
+            
+            Node *table_expr = expression();
+            expect(TOKEN_RIGHTSQUARE);
+            
+            if(accept(TOKEN_EQUAL)) {
+                Node *expr = expression();
+                expect(TOKEN_SEMICOLON);
+                
+                return make_table_assignment_node(make_variable_node(start->val), table_expr, expr);
+            } else {
+                printf("%d:%d: Expected '=' after '[]' specifier!\n", current->line, current->x);
+                exit(-1);
+                return NULL;
+            }
+            
         } else {
             printf("%d:%d: Expected '=' or '(' after ident!\n", current->line, current->x);
             exit(-1);
@@ -280,17 +299,6 @@ Node* program()
             do {
                 Node *variable = make_variable_node(current->val);
                 next();
-                
-                int is_table = 0;
-                if(current->type == TOKEN_LEFTSQUARE) {
-                    next();
-                    expect(TOKEN_RIGHTSQUARE);
-                    is_table = 1;
-                }
-                
-                if(is_table) {
-                    variable->variable.is_table = 1;
-                }
                 
                 nodearray_add(args, variable);
             } while(accept(TOKEN_COMMA));

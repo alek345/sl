@@ -16,6 +16,7 @@ typedef enum {
     NODE_TABLE_READ,
     NODE_RETURN,
     NODE_BASIC_RETURN,
+    NODE_TABLEASSIGNMENT,
 } NodeType;
 
 typedef enum {
@@ -29,6 +30,7 @@ typedef enum {
 typedef enum {
     CONSTANT_NUMBER = 0,
     CONSTANT_STRING,
+    CONSTANT_TABLE, // This is a empty table with no value
 } ConstantType;
 
 typedef enum {
@@ -59,7 +61,6 @@ struct Node {
         
         struct {
             char *name;
-            int is_table;
         } variable;
         
         struct {
@@ -115,6 +116,12 @@ struct Node {
         struct {
             Node *expr;
         } return_node;
+        
+        struct {
+            Node *variable;
+            Node *table_expr;
+            Node *expr;
+        } table_assignment;
     };
 };
 
@@ -128,7 +135,6 @@ void nodearray_add();
 
 
 Node* make_variable_node(char *name);
-Node* make_variable_table_node(char *name);
 Node* make_constant_node(ConstantType type, char *val);
 Node* make_binop_node(BinOpType type, Node *lhs, Node *rhs);
 Node* make_condition_node(ConditionType type, Node *lhs, Node *rhs);
@@ -142,5 +148,6 @@ Node* make_funccall_node(char *name, NodeArray *args);
 Node* make_table_read_node(Node *variable, Node *expr);
 Node* make_basic_return_node();
 Node* make_return_node(Node *expr);
+Node* make_table_assignment_node(Node *variable, Node *table_expr, Node *expr);
 
 #endif /* AST_H */

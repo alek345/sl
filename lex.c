@@ -139,7 +139,7 @@ TokenArray* lex(char *data)
         }
         
         if(*ptr == '\t') {
-            x += 4;
+            x++;
             ptr++;
             continue;
         }

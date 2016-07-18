@@ -7,7 +7,7 @@ Multi line comment
 var line = 1;
 var someunassignedglobal;
 
-func main(args[]) {
+func main(args) {
 	if args["length"] != 0 {
 		print("This program takes no arguments!");
 		return;
@@ -18,6 +18,10 @@ func main(args[]) {
 	var a = 123;
 	var b = 321;
 	var c = (a + b) / 2;
+
+	var person = [];
+	person["age"] = 13;
+	person["name"] = "Bob";
 
 	if c == a {
 		print("nope");

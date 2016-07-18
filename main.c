@@ -214,6 +214,25 @@ void print_node(Node *n)
             printf("Basic return\n");
         } break;
         
+        case NODE_TABLEASSIGNMENT: {
+            print_indents();
+            printf("Table assignment:\n");
+            print_indents();
+            printf("Variable\n");
+            indent++;
+            print_node(n->table_assignment.variable);
+            indent--;
+            print_indents();
+            printf("Table expr\n");
+            indent++;
+            print_node(n->table_assignment.table_expr);
+            indent--;
+            print_indents();
+            printf("Expr\n");
+            indent++;
+            print_node(n->table_assignment.expr);
+            indent--;
+        } break;
     }
 }
 
