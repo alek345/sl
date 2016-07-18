@@ -233,6 +233,23 @@ void print_node(Node *n)
             print_node(n->table_assignment.expr);
             indent--;
         } break;
+        
+        case NODE_WHILE: {
+            print_indents();
+            printf("While:\n");
+            print_indents();
+            printf("Condition:\n");
+            indent++;
+            print_node(n->while_node.condition);
+            indent--;
+            print_indents("Stmts:\n");
+            indent++;
+            int i;
+            for(i = 0; i < n->while_node.stmts->len; i++) {
+                print_node(n->while_node.stmts->nodes[i]);
+            }
+            indent--;
+        } break;
     }
 }
 

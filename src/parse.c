@@ -169,6 +169,7 @@ Node* statement()
         if(accept(TOKEN_EQUAL)) {
             Node *variable = make_variable_node(start->val);
             Node *expr = expression();
+            expect(TOKEN_SEMICOLON);
             
             return make_assignement_node(variable, expr);
         } else if(accept(TOKEN_LEFTPAR)) {
@@ -227,7 +228,7 @@ Node* statement()
                 expect(TOKEN_LEFTCURLY);
                 while(current->type != TOKEN_RIGHTCURLY) {
                     nodearray_add(else_stmts, statement());
-                };
+                }
                 expect(TOKEN_RIGHTCURLY);
             }
         }
@@ -235,7 +236,20 @@ Node* statement()
         return make_if_node(cond, stmts, else_stmts);
     } else if(accept(TOKEN_WHILE)) {
         
-        printf("TODO while!\n");
+        Node *cond = condition();
+        expect(TOKEN_LEFTCURLY);
+        
+        NodeArray *stmts = nodearray_new();
+        if(accept(TOKEN_RIGHTCURLY)) {
+            
+        } else {
+            while(current->type != TOKEN_RIGHTCURLY) {
+                nodearray_add(stmts, statement());
+            }
+            expect(TOKEN_RIGHTCURLY);
+        }
+        
+        return make_while_node(cond, stmts);
         
     } else if(accept(TOKEN_VAR)) {
         

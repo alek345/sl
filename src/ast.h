@@ -17,6 +17,7 @@ typedef enum {
     NODE_RETURN,
     NODE_BASIC_RETURN,
     NODE_TABLEASSIGNMENT,
+    NODE_WHILE,
 } NodeType;
 
 typedef enum {
@@ -122,6 +123,11 @@ struct Node {
             Node *table_expr;
             Node *expr;
         } table_assignment;
+        
+        struct {
+            Node *condition;
+            NodeArray *stmts;
+        } while_node;
     };
 };
 
@@ -132,7 +138,6 @@ struct NodeArray {
 
 NodeArray* nodearray_new();
 void nodearray_add();
-
 
 Node* make_variable_node(char *name);
 Node* make_constant_node(ConstantType type, char *val);
@@ -149,5 +154,6 @@ Node* make_table_read_node(Node *variable, Node *expr);
 Node* make_basic_return_node();
 Node* make_return_node(Node *expr);
 Node* make_table_assignment_node(Node *variable, Node *table_expr, Node *expr);
+Node* make_while_node(Node *condition, NodeArray *stmts);
 
 #endif /* AST_H */

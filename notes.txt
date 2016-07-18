@@ -1,0 +1,15 @@
+NODE_NEGATION should probably be NODE_UNARY.
+
+A NODE_BASIC_RETURN should probably return a null value. This
+should also be the same for the end of function return. This
+way you can safely assign the return value of a function
+even though it doesnt return anything. The best would probably
+to give a warning or something at compile time. Altough that
+requires some good or atleast developed semantics.
+
+Make sure some_table["some_other_table"]["value"] = 5; Works
+
+Also look into adding a "dot" syntax:
+
+some_table["some_other_table"]["value"] = 5; turns into:
+some_table.some_other_table.value = 5;

@@ -182,3 +182,14 @@ Node* make_table_assignment_node(Node *variable, Node *table_expr, Node *expr)
     
     return n;
 }
+
+Node* make_while_node(Node *condition, NodeArray *stmts)
+{
+    Node *n = malloc(sizeof(Node));
+    
+    n->type = NODE_WHILE;
+    n->while_node.condition = condition;
+    n->while_node.stmts = stmts;
+    
+    return n;
+}

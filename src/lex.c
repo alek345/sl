@@ -61,6 +61,11 @@ int is_alnum(int c)
     return is_alpha(c) || is_num(c);
 }
 
+int is_valid_ident(int c)
+{
+    return is_alnum(c) || c == '_';
+}
+
 Token* make_basic_token(TokenType type, int x, int line)
 {
     Token *t = malloc(sizeof(Token));
@@ -114,9 +119,12 @@ TokenArray* lex(char *data)
                     break;
                 }
                 
+                /* this is not right, doesnt handle old mac endings properly*/
                 if(*ptr == '\n') {
                     line++;
                     x = 1;
+                    ptr++;
+                    continue;
                 }
                 
                 if((*ptr == '*') && (*(ptr+1) == '/')) {
@@ -204,7 +212,7 @@ TokenArray* lex(char *data)
             ptr++;
             x++;
             
-            while(is_alnum(*ptr)) {
+            while(is_valid_ident(*ptr)) {
                 len++;
                 ptr++;
                 x++;
@@ -293,7 +301,7 @@ TokenArray* lex(char *data)
             continue;
         }
         
-        printf("Ignoring unexpected token '%c'\n", *ptr);
+        printf("%d:%d: Ignoring unexpected token '%c'\n", line, x, *ptr);
         ptr++;
     }
     

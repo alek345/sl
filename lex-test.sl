@@ -7,11 +7,26 @@ Multi line comment
 var line = 1;
 var someunassignedglobal;
 
+func test_while() {
+	var i = 10;
+	while i >= 0 {
+		print(i, " out of 10");
+		i = i - 1;
+	}
+}
+
 func main(args) {
 	if args["length"] != 0 {
 		print("This program takes no arguments!");
 		return;
-    }
+	}
+
+	a["b"]["c"] = 3;
+	/*
+		if we introduce a "dot" syntax this would be the same as:
+
+			a.b.c = 3;
+	*/
 
 	print("Hello, world");
 
@@ -28,4 +43,6 @@ func main(args) {
 	} else {
 		print("yay!");
 	}
+
+
 }
