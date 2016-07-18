@@ -13,6 +13,9 @@ typedef enum {
     NODE_DECL,
     NODE_FUNCDECL,
     NODE_FUNCCALL,
+    NODE_TABLE_READ,
+    NODE_RETURN,
+    NODE_BASIC_RETURN,
 } NodeType;
 
 typedef enum {
@@ -30,6 +33,7 @@ typedef enum {
 
 typedef enum {
     CONDITION_EQUALS = 0,
+    CONDITION_NEQUALS,
     CONDITION_LT,
     CONDITION_GT,
     CONDITION_LTE,
@@ -55,6 +59,7 @@ struct Node {
         
         struct {
             char *name;
+            int is_table;
         } variable;
         
         struct {
@@ -97,6 +102,19 @@ struct Node {
             char *name;
             NodeArray *args;
         } func_call;
+        
+        struct {
+            Node *variable;
+            Node *expr;
+        } table_read;
+        
+        struct {
+            
+        } basic_return;
+        
+        struct {
+            Node *expr;
+        } return_node;
     };
 };
 
@@ -110,6 +128,7 @@ void nodearray_add();
 
 
 Node* make_variable_node(char *name);
+Node* make_variable_table_node(char *name);
 Node* make_constant_node(ConstantType type, char *val);
 Node* make_binop_node(BinOpType type, Node *lhs, Node *rhs);
 Node* make_condition_node(ConditionType type, Node *lhs, Node *rhs);
@@ -120,5 +139,8 @@ Node* make_decl_node(Node *var);
 Node* make_decl_assignment_node(Node *var, Node *expr);
 Node* make_funcdecl_node(char *name, NodeArray *args, NodeArray *stmts);
 Node* make_funccall_node(char *name, NodeArray *args);
+Node* make_table_read_node(Node *variable, Node *expr);
+Node* make_basic_return_node();
+Node* make_return_node(Node *expr);
 
 #endif /* AST_H */

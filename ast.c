@@ -25,6 +25,19 @@ Node* make_variable_node(char *name)
     
     n->type = NODE_VARIABLE;
     n->variable.name = strdup(name);
+    n->variable.is_table = 0;
+    
+    return n;
+}
+
+
+Node* make_variable_table_node(char *name)
+{
+    Node *n = malloc(sizeof(Node));
+    
+    n->type = NODE_VARIABLE;
+    n->variable.name = strdup(name);
+    n->variable.is_table = 1;
     
     return n;
 }
@@ -35,7 +48,7 @@ Node* make_constant_node(ConstantType type, char *val)
     
     n->type = NODE_CONSTANT;
     n->constant.type = type;
-    n->constant.val = val;
+    n->constant.val = strdup(val);
     
     return n;
 }
@@ -137,6 +150,36 @@ Node* make_funccall_node(char *name, NodeArray *args)
     n->type = NODE_FUNCCALL;
     n->func_call.name = strdup(name);
     n->func_call.args = args;
+    
+    return n;
+}
+
+Node* make_table_read_node(Node *variable, Node *expr)
+{
+    Node *n = malloc(sizeof(Node));
+    
+    n->type = NODE_TABLE_READ;
+    n->table_read.variable = variable;
+    n->table_read.expr = expr;
+    
+    return n;
+}
+
+Node* make_basic_return_node()
+{
+    Node *n = malloc(sizeof(Node));
+    
+    n->type = NODE_BASIC_RETURN;
+    
+    return n;
+}
+
+Node* make_return_node(Node *expr)
+{
+    Node *n = malloc(sizeof(Node));
+    
+    n->type = NODE_RETURN;
+    n->return_node.expr = expr;
     
     return n;
 }

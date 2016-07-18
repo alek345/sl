@@ -24,6 +24,7 @@ typedef enum {
 
     /* Condition operator */
     TOKEN_EQUALS,      // ==
+    TOKEN_NEQUALS,     // !=
     TOKEN_LT,          // <
     TOKEN_GT,          // >
     TOKEN_LTE,         // <=
@@ -42,6 +43,7 @@ typedef enum {
     TOKEN_ELSE,        // else
     TOKEN_VAR,         // var
     TOKEN_WHILE,       // while
+    TOKEN_RETURN,      // return
 } TokenType;
 
 typedef struct {

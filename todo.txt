@@ -1,0 +1,12 @@
+Small bugs:
+
+[ ] Fix line numbers and x offset
+
+Major features:
+
+[ ] First milestone. A program running.
+
+[X] Lexer
+[X] Basic Parser
+[ ] Semantin analysis
+[ ] An execution engine

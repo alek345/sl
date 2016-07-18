@@ -4,14 +4,22 @@
 Multi line comment
 */
 
-func main() {
+var line = 1;
+var someunassignedglobal;
+
+func main(args[]) {
+	if args["length"] != 0 {
+		print("This program takes no arguments!");
+		return;
+    }
+
 	print("Hello, world");
 
 	var a = 123;
-	var b = 321 * 4;
-	var c = 123 + 321 / 2;
+	var b = 321;
+	var c = (a + b) / 2;
 
-	if c < a {
+	if c == a {
 		print("nope");
 	} else {
 		print("yay!");

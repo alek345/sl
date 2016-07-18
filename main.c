@@ -130,7 +130,10 @@ void print_node(Node *n)
         
         case NODE_DECL: {
             print_indents();
-            printf("Decl: %s\n", n->decl.name);
+            printf("Decl:\n");
+            indent++;
+            print_node(n->decl.name);
+            indent--;
         } break;
         
         case NODE_DECLASSIGNMENT: {
@@ -138,7 +141,9 @@ void print_node(Node *n)
             printf("Decl assignement:\n");
             print_indents();
             printf("Name:\n");
+            indent++;
             print_node(n->decl_assignment.name);
+            indent--;
             print_indents();
             printf("Expr:\n");
             indent++;
@@ -178,6 +183,37 @@ void print_node(Node *n)
             }
             indent--;
         } break;
+        
+        case NODE_TABLE_READ: {
+            print_indents();
+            printf("Table read:\n");
+            print_indents();
+            printf("Variable\n");
+            indent++;
+            print_node(n->table_read.variable);
+            indent--;
+            print_indents();
+            printf("Expr:\n");
+            indent++;
+            print_node(n->table_read.expr);
+            indent--;
+        } break;
+        
+        case NODE_RETURN: {
+            print_indents();
+            printf("Return\n");
+            print_indents();
+            printf("Expr:\n");
+            indent++;
+            print_node(n->return_node.expr);
+            indent--;
+        } break;
+        
+        case NODE_BASIC_RETURN: {
+            print_indents();
+            printf("Basic return\n");
+        } break;
+        
     }
 }
 

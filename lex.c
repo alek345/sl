@@ -38,6 +38,8 @@ const char* token_to_string(TokenType type)
         NAME(TOKEN_BOR);
         NAME(TOKEN_BAND);
         NAME(TOKEN_COMMA);
+        NAME(TOKEN_NEQUALS);
+        NAME(TOKEN_RETURN);
 #undef NAME
     }
     
@@ -105,6 +107,7 @@ TokenArray* lex(char *data)
         
         if((*ptr == '/') && (*(ptr+1) == '*')) {
             ptr += 2;
+            x += 2;
             
             while(*ptr) {
                 if(*ptr == 0) {
@@ -118,10 +121,12 @@ TokenArray* lex(char *data)
                 
                 if((*ptr == '*') && (*(ptr+1) == '/')) {
                     ptr += 2;
+                    x += 2;
                     break;
                 }
                 
                 ptr++;
+                x++;
             }
             
             continue;
@@ -156,6 +161,19 @@ TokenArray* lex(char *data)
             line++;
             continue;
         }
+             
+        /* If there ever is triple tokens. Remeber to check that    */
+        /* ptr+1 and ptr+2 isnt zero. Otherwise segfault will ocurr */
+        
+        /* If ptr+1 is 0, then theese checks are unnescesary */
+#define DOUBLE_TOKEN(t1, t2, type) if((*ptr == t1) && (*(ptr+1) == t2)) { list_add(list, make_basic_token(type, x, line)); ptr += 2; x += 2; }
+        DOUBLE_TOKEN('=', '=', TOKEN_EQUALS);
+        DOUBLE_TOKEN('!', '=', TOKEN_NEQUALS);
+        DOUBLE_TOKEN('<', '=', TOKEN_LTE);
+        DOUBLE_TOKEN('>', '=', TOKEN_GTE);
+        DOUBLE_TOKEN('|', '|', TOKEN_LOR);
+        DOUBLE_TOKEN('&', '&', TOKEN_LAND);
+#undef DOUBLE_TOKEN
         
         switch(*ptr) {
 #define SINGLE_TOKEN(tok, type) case tok: { list_add(list, make_basic_token(type, x, line)); ptr++; x++; } continue;
@@ -180,30 +198,18 @@ TokenArray* lex(char *data)
 #undef SINGLE_TOKEN
         }
         
-        /* If ptr+1 is 0, then theese checks are unnescesary */
-#define DOUBLE_TOKEN(t1, t2, type) if((*ptr == t1) && (*(ptr+1) == t2)) { list_add(list, make_basic_token(type, x, line)); ptr += 2; x += 2; }
-        DOUBLE_TOKEN('=', '=', TOKEN_EQUALS);
-        DOUBLE_TOKEN('<', '=', TOKEN_LTE);
-        DOUBLE_TOKEN('>', '=', TOKEN_GTE);
-        DOUBLE_TOKEN('|', '|', TOKEN_LOR);
-        DOUBLE_TOKEN('&', '&', TOKEN_LAND);
-#undef DOUBLE_TOKEN
-        
-        /* If there ever is triple tokens. Remeber to check that    */
-        /* ptr+1 and ptr+2 isnt zero. Otherwise segfault will ocurr */
-        
         if(is_alpha(*ptr)) {
             char *start = ptr;
             int len = 1;
             ptr++;
+            x++;
             
             while(is_alnum(*ptr)) {
                 len++;
                 ptr++;
+                x++;
             }
-            
-            x += len;
-            
+                        
             char *text = malloc(sizeof(char)*(len+1));
             text[len] = 0;
             
@@ -224,6 +230,7 @@ TokenArray* lex(char *data)
         
         if(*ptr == '"') {
             ptr++;
+            x++;
             char* start = ptr;
             int len = 0;
             while(*ptr != '"') {
@@ -233,8 +240,10 @@ TokenArray* lex(char *data)
                 }
                 ptr++;
                 len++;
+                x++;
             }
             ptr++;
+            x++;
             
             char* text = malloc(sizeof(char)*(len+1));
             text[len] = 0;
@@ -258,13 +267,13 @@ TokenArray* lex(char *data)
             char *start = ptr;
             int len = 1;
             ptr++;
+            x++;
             
             while(is_num(*ptr)) {
                 len++;
                 ptr++;
+                x++;
             }
-            
-            x += len;
             
             char *text = malloc(sizeof(char)*(len+1));
             text[len] = 0;
@@ -298,6 +307,7 @@ TokenArray* lex(char *data)
         KEYWORD("else", TOKEN_ELSE)
         KEYWORD("var", TOKEN_VAR)
         KEYWORD("while", TOKEN_WHILE)
+        KEYWORD("return", TOKEN_RETURN);
 #undef KEYWORD
     }
     

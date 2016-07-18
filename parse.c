@@ -43,7 +43,18 @@ Node* factor()
 {
     Token *start = current;
     if(accept(TOKEN_IDENT)) {
-        return make_variable_node(start->val);
+        
+        if(accept(TOKEN_LEFTSQUARE)) {
+            
+            Node *expr = expression();
+            expect(TOKEN_RIGHTSQUARE);
+            
+            return make_table_read_node(make_variable_node(start->val), expr);
+            
+        } else {
+            return make_variable_node(start->val);
+        }
+        
     } else if(accept(TOKEN_NUMBER)) {
         return make_constant_node(CONSTANT_NUMBER, start->val);
     } else if (accept(TOKEN_LEFTPAR)) {
@@ -98,7 +109,7 @@ Node* expression()
         if(op->type == TOKEN_PLUS) {
             lhs = make_binop_node(BINOP_ADD, lhs, rhs);
         } else {
-            rhs = make_binop_node(BINOP_SUB, lhs, rhs);
+            lhs = make_binop_node(BINOP_SUB, lhs, rhs);
         }
     }
     
@@ -114,6 +125,7 @@ Node* condition()
     Node *lhs = expression();
     
     if(current->type == TOKEN_EQUALS ||
+       current->type == TOKEN_NEQUALS ||
        current->type == TOKEN_LT ||
        current->type == TOKEN_GT ||
        current->type == TOKEN_LTE ||
@@ -124,6 +136,8 @@ Node* condition()
         
         if(op->type == TOKEN_EQUALS) {
             return make_condition_node(CONDITION_EQUALS, lhs, rhs);
+        } else if(op->type == TOKEN_NEQUALS) {
+            return make_condition_node(CONDITION_NEQUALS, lhs, rhs);
         } else if(op->type == TOKEN_LT) {
             return make_condition_node(CONDITION_LT, lhs, rhs);
         } else if(op->type == TOKEN_GT) {
@@ -139,7 +153,7 @@ Node* condition()
         }
         
     } else {
-        printf("%d:%d: Error in condition. Invalid operator!\n");
+        printf("%d:%d: Error in condition. Invalid operator!\n", current->line, current->x);
         exit(-1);
         return NULL;
     }
@@ -179,9 +193,9 @@ Node* statement()
         expect(TOKEN_LEFTCURLY);
         if(accept(TOKEN_RIGHTCURLY)) {
         } else {
-            do {
+            while(current->type != TOKEN_RIGHTCURLY) {
                 nodearray_add(stmts, statement());
-            } while(accept(TOKEN_SEMICOLON));
+            }
             expect(TOKEN_RIGHTCURLY);
         }
         
@@ -192,9 +206,9 @@ Node* statement()
                 
             } else {
                 expect(TOKEN_LEFTCURLY);
-                do {
+                while(current->type != TOKEN_RIGHTCURLY) {
                     nodearray_add(else_stmts, statement());
-                } while(accept(TOKEN_SEMICOLON));
+                };
                 expect(TOKEN_RIGHTCURLY);
             }
         }
@@ -227,6 +241,16 @@ Node* statement()
             return NULL;
         }
         
+    } else if(accept(TOKEN_RETURN)) {
+        
+        if(accept(TOKEN_SEMICOLON)) {
+            return make_basic_return_node();
+        }
+        
+        Node *expr = expression();
+        
+        return make_return_node(expr);
+        
     } else {
         printf("%d:%d: Expected statement!\n", current->line, current->x);
         exit(-1);
@@ -254,9 +278,24 @@ Node* program()
             
         } else {
             do {
-                nodearray_add(args, make_variable_node(current->val));
+                Node *variable = make_variable_node(current->val);
                 next();
+                
+                int is_table = 0;
+                if(current->type == TOKEN_LEFTSQUARE) {
+                    next();
+                    expect(TOKEN_RIGHTSQUARE);
+                    is_table = 1;
+                }
+                
+                if(is_table) {
+                    variable->variable.is_table = 1;
+                }
+                
+                nodearray_add(args, variable);
             } while(accept(TOKEN_COMMA));
+            
+            expect(TOKEN_RIGHTPAR);
         }
         
         expect(TOKEN_LEFTCURLY);
@@ -268,6 +307,7 @@ Node* program()
             while(current->type != TOKEN_RIGHTCURLY) {
                 nodearray_add(stmts, statement());
             }
+            expect(TOKEN_RIGHTCURLY);
         }
         
         return make_funcdecl_node(ident->val, args, stmts);
