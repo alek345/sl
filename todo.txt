@@ -2,6 +2,10 @@ Small bugs:
 
 [ ] Fix line numbers and x offset
 
+Small features:
+
+[ ] Add support for escape sequences like \n in string lexing
+
 Major features:
 
 [ ] First milestone. A program running.

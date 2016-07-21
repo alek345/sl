@@ -1,3 +1,27 @@
+## Engine notes ##
+
+/* The c hashmap library found on github */
+#include "hashmap.h"
+typedef struct {
+	map_t hashmap;
+} SLTable;
+
+typedef struct {
+	char *data; // Zero-terminated
+	size_t data_size; // Includes zero
+} SLString;
+
+/* String utlity functions for creation, concatting, etc. */
+
+typedef struct {
+	union {
+		double number;
+		SLString *string;
+		SLTable *table;
+	};
+} SLValue;
+
+## More syntax or compiler notes ##
 NODE_NEGATION should probably be NODE_UNARY.
 
 A NODE_BASIC_RETURN should probably return a null value. This

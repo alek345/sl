@@ -51,6 +51,18 @@ Node* factor()
             
             return make_table_read_node(make_variable_node(start->val), expr);
             
+        } else if(accept(TOKEN_LEFTPAR)) {
+            
+            NodeArray *args = nodearray_new();
+            
+            do {
+                nodearray_add(args, expression());
+            } while(accept(TOKEN_COMMA));
+            
+            expect(TOKEN_RIGHTPAR);
+            
+            return make_funccall_node(start->val, args);
+            
         } else {
             return make_variable_node(start->val);
         }

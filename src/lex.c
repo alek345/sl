@@ -115,11 +115,20 @@ TokenArray* lex(char *data)
             x += 2;
             
             while(*ptr) {
-                if(*ptr == 0) {
-                    break;
+                
+                if(*ptr == '\r') {
+                    line++;
+                    ptr++;
+                    x = 1;
+                    
+                    // TODO: Handle if ptr == null
+                    if(*ptr == '\n') {
+                        ptr++;
+                    }
+                    continue;
                 }
                 
-                /* this is not right, doesnt handle old mac endings properly*/
+                /* Is this right? */
                 if(*ptr == '\n') {
                     line++;
                     x = 1;
@@ -140,13 +149,7 @@ TokenArray* lex(char *data)
             continue;
         }
         
-        if(*ptr == ' ') {
-            x++;
-            ptr++;
-            continue;
-        }
-        
-        if(*ptr == '\t') {
+        if(*ptr == ' ' || *ptr == '\t') {
             x++;
             ptr++;
             continue;
