@@ -21,6 +21,15 @@ func main(args) {
 		return;
 	}
 
+	if firstchar == lastchar {
+		print("First and last characters match in: ", string);
+	}
+
+	var string = "sample_string";
+	var len = strlen(string);
+	var firstchar = strchr(0);
+	var lastchar = strchr(len - 1);
+
 	a["b"]["c"] = 3;
 	/*
 		if we introduce a "dot" syntax this would be the same as:
