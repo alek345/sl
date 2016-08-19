@@ -1,0 +1,38 @@
+Stack based VM
+
+Only two registers. PC ans SP
+
+There is 'x' amount of global variable space provided by the vm.
+So if you have to store an int(2) and the string "Hello, world!" in
+global varible memory it would look like this:
+
+byte global_mem[sizeof(int)+strlen("Hello, world!")+1];
+The content would look like this:
+00 00 00 02 'H' 'e' 'l' 'l' 'o' ',' ' ' 'w' 'o' 'r' 'l' 'd' '!' 00
+
+To index this we would need a table that keeps tab of where each entry
+starts. For this example the table would look something like
+
++-------+--------+
+| ENTRY | OFFSET |
+|   0   |   0    |
+|   1   |   4    |
++-------+--------+
+
+The vm will have several abstract opcodes. But I am going to
+try to keep the instruction set RISC like. However there will probably be
+some multiple byte opcodes.
+
+Each opcode should be 1 byte. They can then be followed by neccesaray
+information. Like constants or global variable entries.
+
+
+Instruction set
+========================
+
+bb = 1 byte information
+bbbb = 2 byte information
+bbbbbbbb = 4 byte information
+
+ICONST bbbbbbbb
+FCONST bbbbbbbb
