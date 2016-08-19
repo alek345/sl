@@ -106,7 +106,7 @@ struct Node {
         } func_call;
         
         struct {
-            Node *variable;
+            Node *variable; // Can be another table read
             Node *expr;
         } table_read;
         

@@ -201,12 +201,20 @@ Node* statement()
             Node *table_expr = expression();
             expect(TOKEN_RIGHTSQUARE);
             
+            while(accept(TOKEN_LEFTSQUARE)) {
+                Node *table_expr_inside = expression();
+                expect(TOKEN_RIGHTSQUARE);
+                
+                table_expr = make_table_read_node(table_expr, table_expr_inside);
+            }
+            
             if(accept(TOKEN_EQUAL)) {
                 Node *expr = expression();
                 expect(TOKEN_SEMICOLON);
                 
                 return make_table_assignment_node(make_variable_node(start->val), table_expr, expr);
             } else {
+                /* TODO: Rewrite this error message to make more sence */
                 printf("%d:%d: Expected '=' after '[]' specifier!\n", current->line, current->x);
                 exit(-1);
                 return NULL;

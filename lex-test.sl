@@ -21,21 +21,25 @@ func main(args) {
 		return;
 	}
 
-	if firstchar == lastchar {
-		print("First and last characters match in: ", string);
-	}
+//	test_while(); // This does not work for some reason
 
 	var string = "sample_string";
 	var len = strlen(string);
 	var firstchar = strchr(0);
 	var lastchar = strchr(len - 1);
+	
+	
+	if firstchar == lastchar {
+		print("First and last characters match in: ", string);
+	}
 
-	a["b"]["c"] = 3;
-	/*
-		if we introduce a "dot" syntax this would be the same as:
+	var table = [];
+	table["b"] = [];
+	table["b"]["c"] = 3;
+	table["b"]["d"] = table["b"]["c"]; // Add nested table read in factor() aswell. Copy code from statement()
 
-			a.b.c = 3;
-	*/
+	table["b"]["d"] = [];
+	table["b"]["d"]["just_one_more_to_be_sure"] = 5;
 
 	print("Hello, world");
 
@@ -52,6 +56,5 @@ func main(args) {
 	} else {
 		print("yay!");
 	}
-
 
 }

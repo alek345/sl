@@ -192,7 +192,7 @@ TokenArray* lex(char *data)
             SINGLE_TOKEN(')', TOKEN_RIGHTPAR);
             SINGLE_TOKEN('{', TOKEN_LEFTCURLY);
             SINGLE_TOKEN('}', TOKEN_RIGHTCURLY);
-            SINGLE_TOKEN('.', TOKEN_DOT);
+/* Currently unused SINGLE_TOKEN('.', TOKEN_DOT); */
             SINGLE_TOKEN(',', TOKEN_COMMA);
             SINGLE_TOKEN('*', TOKEN_ASTRIX);
             SINGLE_TOKEN('/', TOKEN_SLASH);
